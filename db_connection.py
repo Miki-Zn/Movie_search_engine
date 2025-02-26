@@ -1,6 +1,5 @@
 import os
 from dotenv import load_dotenv
-#import mysql.connector
 from pymongo import MongoClient
 import pymysql
 
@@ -16,10 +15,10 @@ def connect_mysql():
 
     try:
         connection = pymysql.connect(**dbconfig)
-        print(" Подключение к MySQL успешно!")
+        print("Connection to MySQL was successful!")
         return connection
     except pymysql.Error as err:
-        print(f" Ошибка подключения к MySQL: {err}")
+        print(f"Error connecting to MySQL: {err}")
         return None
 
 
@@ -30,9 +29,8 @@ def connect_mongo():
     try:
         client = MongoClient(mongo_url)
         db = client[mongo_db]
-        print(" Подключение к MongoDB успешно!")
+        print("Connection to MongoDB was successful!")
         return db
     except Exception as err:
-        print(f" Ошибка подключения к MongoDB: {err}")
+        print(f"Error connecting to MongoDB: {err}")
         return None
-
