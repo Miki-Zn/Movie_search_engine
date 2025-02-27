@@ -56,10 +56,10 @@ def display_results(results: List[Any]) -> None:
         return
 
     for film in results:
-        if isinstance(film, dict):  
+        if isinstance(film, dict):
             title = film.get("title", "Unknown Title")
             release_year = film.get("release_year", "Year not specified")
-        elif isinstance(film, (list, tuple)) and len(film) >= 3:  
+        elif isinstance(film, (list, tuple)) and len(film) >= 3:
             title = str(film[1]) if film[1] else "Unknown Title"
             release_year = str(film[2]) if film[2] else "Year not specified"
         else:
