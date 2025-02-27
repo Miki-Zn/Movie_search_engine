@@ -34,7 +34,7 @@ def get_popular_searches() -> List[Dict[str, Any]]:
     if db_client is None:
         return []
 
-    db = os.getenv("MONGO_DATABASE")  
+    db = os.getenv("MONGO_DATABASE")
     search_collection = os.getenv("MONGO_COLLECTION")
 
     search_data = {
