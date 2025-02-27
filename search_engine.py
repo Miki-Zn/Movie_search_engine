@@ -7,15 +7,15 @@ def search_movies_by_keyword(keyword: str) -> List[Dict[str, Any]]:
     if connection is None:
         return []
 
-    sql = """
+    query = """
     SELECT film_id, title, release_year
     FROM film
     WHERE LOWER(title) LIKE LOWER(%s) OR LOWER(description) LIKE LOWER(%s)
     LIMIT 10;
     """
 
-    with connection.cursor(cursor=pymysql.cursors.DictCursor) as cursor:
-        cursor.execute(sql, (f"%{keyword}%", f"%{keyword}%"))
+    with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+        cursor.execute(query, (f"%{keyword}%", f"%{keyword}%"))
         results = cursor.fetchall()
 
     connection.close()
@@ -27,7 +27,7 @@ def search_movies_by_genre_and_year(genre: str, year: int) -> List[Dict[str, Any
     if connection is None:
         return []
 
-    sql = """
+    query = """
     SELECT f.film_id, f.title, f.release_year
     FROM film f
     JOIN film_category fc ON f.film_id = fc.film_id
@@ -36,9 +36,8 @@ def search_movies_by_genre_and_year(genre: str, year: int) -> List[Dict[str, Any
     LIMIT 10;
     """
 
-    with connection.cursor(cursor=pymysql.cursors.DictCursor) as cursor:
-        print(f"Executing query: {sql} with params: ({genre}, {year})")
-        cursor.execute(sql, (genre, year))
+    with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+        cursor.execute(query, (genre, year))
         results = cursor.fetchall()
 
     connection.close()
