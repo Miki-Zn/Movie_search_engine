@@ -1,18 +1,18 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from typing import List, Tuple, Any
-from db_connection import connect_mysql
+from typing import List, Dict, Any
 from search_engine import search_movies_by_keyword, search_movies_by_genre_and_year
 from search_history import get_popular_searches
 
 
 def search_by_keyword() -> None:
     keyword: str = keyword_entry.get().strip()
-    if keyword:
-        results: List[Tuple[Any, ...]] = search_movies_by_keyword(keyword)
-        display_results(results)
-    else:
+    if not keyword:
         messagebox.showwarning("Warning", "Keyword cannot be empty!")
+        return
+
+    results: List[Dict[str, Any]] = search_movies_by_keyword(keyword)
+    display_results(results)
 
 
 def search_by_genre_and_year() -> None:
@@ -23,21 +23,18 @@ def search_by_genre_and_year() -> None:
         messagebox.showwarning("Warning", "Either genre or year must be provided!")
         return
 
-    results: List[Tuple[Any, ...]] = []
+    try:
+        year: int = int(year_input) if year_input else None
+    except ValueError:
+        messagebox.showerror("Invalid input", "Year must be a number.")
+        return
 
-    if genre:
-        try:
-            year: int = int(year_input) if year_input else None
-            results = search_movies_by_genre_and_year(genre, year)
-        except ValueError:
-            messagebox.showerror("Invalid input", "Year must be a number.")
-            return
-
+    results: List[Dict[str, Any]] = search_movies_by_genre_and_year(genre, year)
     display_results(results)
 
 
 def show_popular_searches() -> None:
-    popular_searches: List[Tuple[Any, ...]] = get_popular_searches()
+    popular_searches = get_popular_searches()
     results_text.delete(1.0, tk.END)
 
     if not popular_searches:
@@ -45,10 +42,12 @@ def show_popular_searches() -> None:
         return
 
     for search in popular_searches:
-        results_text.insert(tk.END, f"{search[0]} ({search[1]} times)\n")
+        query = search.get("_id", "Unknown Query")
+        count = search.get("count", 0)
+        results_text.insert(tk.END, f"{query} ({count} times)\n")
 
 
-def display_results(results: List[Any]) -> None:
+def display_results(results: List[Dict[str, Any]]) -> None:
     results_text.delete(1.0, tk.END)
 
     if not results:
@@ -56,17 +55,10 @@ def display_results(results: List[Any]) -> None:
         return
 
     for film in results:
-        if isinstance(film, dict):
-            title = film.get("title", "Unknown Title")
-            release_year = film.get("release_year", "Year not specified")
-        elif isinstance(film, (list, tuple)) and len(film) >= 3:
-            title = str(film[1]) if film[1] else "Unknown Title"
-            release_year = str(film[2]) if film[2] else "Year not specified"
-        else:
-            results_text.insert(tk.END, "Invalid data format.\n")
-            continue
-
+        title = film.get("title", "Unknown Title")
+        release_year = film.get("release_year", "Year not specified")
         results_text.insert(tk.END, f"{title} ({release_year})\n")
+
 
 root = tk.Tk()
 root.title("Movie Search Engine")
