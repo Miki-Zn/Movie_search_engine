@@ -2,7 +2,7 @@ from db_connection import connect_mysql, connect_mongo
 from typing import List, Dict, Any
 import pymysql
 from datetime import datetime
-
+import os
 
 def search_movies_by_keyword(keyword: str) -> List[Dict[str, Any]]:
     connection = connect_mysql()
