@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from typing import List, Dict, Any
 from search_engine import search_movies_by_keyword, search_movies_by_genre_and_year
-from search_history import get_popular_searches, save_search_to_mongo  
+from search_history import save_search_to_mongo, get_popular_searches
 
 
 def search_by_keyword() -> None:
@@ -14,7 +14,7 @@ def search_by_keyword() -> None:
     results: List[Dict[str, Any]] = search_movies_by_keyword(keyword)
 
     if results:
-        save_search_to_mongo(keyword, results) 
+        save_search_to_mongo(keyword, results)
 
     display_results(results)
 
@@ -27,16 +27,19 @@ def search_by_genre_and_year() -> None:
         messagebox.showwarning("Warning", "Either genre or year must be provided!")
         return
 
-    try:
-        year: int = int(year_input) if year_input else None
-    except ValueError:
-        messagebox.showerror("Invalid input", "Year must be a number.")
-        return
+    year = None
+    if year_input:
+        try:
+            year = int(year_input)
+        except ValueError:
+            messagebox.showerror("Invalid input", "Year must be a number.")
+            return
 
     results: List[Dict[str, Any]] = search_movies_by_genre_and_year(genre, year)
 
     if results:
-        save_search_to_mongo(f"{genre} - {year}", results) 
+        search_query = f"{genre} - {year}" if year else genre
+        save_search_to_mongo(search_query, results)
 
     display_results(results)
 
