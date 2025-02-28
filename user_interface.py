@@ -1,6 +1,6 @@
 from typing import List, Dict
 from search_engine import search_movies_by_keyword, search_movies_by_genre_and_year
-from search_history import save_search_query, get_popular_searches
+from search_history import save_search_to_mongo, get_popular_searches
 
 
 def main_menu() -> None:
