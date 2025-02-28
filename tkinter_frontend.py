@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from typing import List, Dict, Any
 from search_engine import search_movies_by_keyword, search_movies_by_genre_and_year
-from search_history import get_popular_searches
+from search_history import get_popular_searches, save_search_to_mongo  
 
 
 def search_by_keyword() -> None:
@@ -12,6 +12,10 @@ def search_by_keyword() -> None:
         return
 
     results: List[Dict[str, Any]] = search_movies_by_keyword(keyword)
+
+    if results:
+        save_search_to_mongo(keyword, results) 
+
     display_results(results)
 
 
@@ -30,6 +34,10 @@ def search_by_genre_and_year() -> None:
         return
 
     results: List[Dict[str, Any]] = search_movies_by_genre_and_year(genre, year)
+
+    if results:
+        save_search_to_mongo(f"{genre} - {year}", results) 
+
     display_results(results)
 
 
