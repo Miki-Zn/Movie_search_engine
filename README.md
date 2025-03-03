@@ -41,13 +41,21 @@ python tkinter_frontend.py
 Project Structure
 
 Movie_Search_Engine/
+
 │-- .gitignore              # Git ignore file
+
 │-- db_connection.py        # MySQL database connection
+
 │-- main.py                 # Main entry point for the console version
+
 │-- requirements.txt        # List of dependencies
+
 │-- search_engine.py        # Core movie search logic
+
 │-- search_history.py       # Search history storage in MongoDB
+
 │-- tkinter_frontend.py     # Graphical interface with Tkinter
+
 │-- user_interface.py       # Console interface logic
 
 
